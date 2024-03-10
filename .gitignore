@@ -1,0 +1,19 @@
+# Folders
+/__pycache__/
+/.vscode/
+/.idea/
+/opus_books_weights/
+/venv/
+
+# Tokenizers
+*.json
+
+# Others
+*.ipynb_checkpoints/
+*.log
+*.csv
+*.pkl
+*.h5
+*.hdf5
+*.npy
+*.npz
