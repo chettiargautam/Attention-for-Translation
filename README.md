@@ -347,14 +347,14 @@ python train.py --batch_size 32 --num_epochs 10 --lr 0.001 --sequence_length 50 
 
 ### Available Training Arguments
 
---batch_size: The batch size for training (default: 16).
---num_epochs: Number of training epochs (default: 5).
---lr: Learning rate for optimization (default: 0.0001).
---sequence_length: The sequence length for training (default: 30).
---dimensions: The text embedding dimension (default: 512).
---source_language: The source language for translation (default: en).
---target_language: The target language for translation (default: fr).
---run_validation: Run validation post-training (default: False).
+- -batch_size: The batch size for training (default: 16).
+- -num_epochs: Number of training epochs (default: 5).
+- -lr: Learning rate for optimization (default: 0.0001).
+- -sequence_length: The sequence length for training (default: 30).
+- -dimensions: The text embedding dimension (default: 512).
+- -source_language: The source language for translation (default: en).
+- -target_language: The target language for translation (default: fr).
+- -run_validation: Run validation post-training (default: False).
 
 Adjust these arguments based on your dataset and training requirements in the `config.py` file.  
 
