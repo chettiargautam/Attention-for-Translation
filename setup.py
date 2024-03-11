@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 """
 This setup.py is used to install the package in the current directory
 To install the package, run the following command in the terminal:
->>> pip install -e .
+>>> python setup.py build develop --user
 """
 
 setup(

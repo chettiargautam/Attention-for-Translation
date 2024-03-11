@@ -2,7 +2,7 @@ import torch
 
 
 class BilingualDataset(torch.utils.data.Dataset):
-    def __init__(self, dataset, tokenizer_source, tokenizer_target, source_language, target_language, sequence_length):
+    def __init__(self, dataset, tokenizer_source, tokenizer_target, source_language, target_language, sequence_length) -> None:
         """
         Constructor for the BilingualDataset class:
         - dataset: the dataset to use
@@ -92,7 +92,7 @@ class BilingualDataset(torch.utils.data.Dataset):
         }
 
    
-def causal_mask(length):
+def causal_mask(length: int) -> torch.Tensor:
     """
     Create a causal mask for the decoder attention
     """
