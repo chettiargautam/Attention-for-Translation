@@ -1,7 +1,7 @@
 from pathlib import Path
 import typing
 
-def get_config():
+def get_config() -> typing.Dict:
     """
     Get the configuration for the training process
     Returns:
