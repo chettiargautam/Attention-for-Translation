@@ -17,3 +17,4 @@
 *.hdf5
 *.npy
 *.npz
+.DS_Store
