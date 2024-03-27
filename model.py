@@ -62,12 +62,11 @@ class PositionalEncoder(torch.nn.Module):
         self.max_sequence_length = max_sequence_length
         self.dropout = torch.nn.Dropout(dropout)
 
-        positional_encodings = numpy.zeros((max_sequence_length, dimensions))
+        positional_encodings = torch.zeros(max_sequence_length, dimensions)
         pos = torch.arange(0, max_sequence_length).unsqueeze(1)
-        denominator = numpy.power(10000, 2 * numpy.arange(0, dimensions, 2) / dimensions)
-        positional_encodings[:, 0::2] = numpy.sin(pos / denominator)
-        positional_encodings[:, 1::2] = numpy.cos(pos / denominator)
-        positional_encodings = torch.tensor(positional_encodings).float()
+        denominator = torch.exp(torch.arange(0, dimensions, 2).float() * -(numpy.log(10000.0) / dimensions))
+        positional_encodings[:, 0::2] = torch.sin(pos / denominator)
+        positional_encodings[:, 1::2] = torch.cos(pos / denominator)
         positional_encodings = positional_encodings.unsqueeze(0)
         self.register_buffer('positional_encodings', positional_encodings)
 
@@ -175,6 +174,7 @@ class MultiHeadAttentionLayer(torch.nn.Module):
         Arguments:
         - dimensions: int - The number of dimensions of the input tensor.
         - num_heads: int - The number of heads to split the input tensor into.
+        - dropout: int - The dropout rate to apply to the attention scores.
         """
         super(MultiHeadAttentionLayer, self).__init__()
         self.dimensions = dimensions
@@ -222,8 +222,7 @@ class MultiHeadAttentionLayer(torch.nn.Module):
             attention_scores = attention_scores.masked_fill(mask == 0, -INF)
         
         attention_scores = torch.nn.functional.softmax(attention_scores, dim=-1)
-        if dropout is not None:
-            attention_scores = torch.nn.Dropout(dropout)(attention_scores)
+        attention_scores = torch.nn.Dropout(dropout)(attention_scores)
         return torch.matmul(attention_scores, value), attention_scores
     
     def forward(self, query: torch.Tensor, key: torch.Tensor, value: torch.Tensor, mask: torch.Tensor = None) -> torch.Tensor:
@@ -253,7 +252,7 @@ class MultiHeadAttentionLayer(torch.nn.Module):
 
         enriched_values, self.attention_scores = MultiHeadAttentionLayer.Attention(query, key, value, mask)
 
-        enriched_values = enriched_values.transpose(1, 2).contiguous().view(enriched_values.size(0), -1, self.dimensions)
+        enriched_values = enriched_values.transpose(1, 2).contiguous().view(enriched_values.size(0), -1, self.head_dimension * self.num_heads)
 
         enriched_values = self.output_projection(enriched_values)
 
@@ -336,6 +335,7 @@ class Encoder(torch.nn.Module):
         - Initializes the Encoder module. This module is used to encode the input tensor.
         
         Arguments:
+        - features: int - The number of features in the input tensor.
         - layers: torch.nn.ModuleList - The layers to apply to the input tensor.
         """
         super(Encoder, self).__init__()
@@ -412,6 +412,7 @@ class Decoder(torch.nn.Module):
         - Initializes the Decoder module. This module is used to decode the input tensor.
         
         Arguments:
+        - features: int - The number of features in the input tensor.
         - layers: torch.nn.ModuleList - The layers to apply to the input tensor.
         """
         super(Decoder, self).__init__()
@@ -474,6 +475,7 @@ class Transformer(torch.nn.Module):
         
         Arguments:
         - input_embedder: InputEmbedder - The input embedder to embed the input tensor.
+        - target_embedder: InputEmbedder - The target embedder to embed the input tensor.
         - positional_encoder: PositionalEncoder - The positional encoder to encode the input tensor.
         - encoder: Encoder - The encoder to encode the input tensor.
         - decoder: Decoder - The decoder to decode the input tensor.
