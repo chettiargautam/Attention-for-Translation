@@ -331,6 +331,8 @@ def train_model(config):
             optimizer.zero_grad(set_to_none=True)
             global_step += 1
 
+            torch.cuda.empty_cache()
+
         model_filename = get_weights_file_path(config, f"{epoch:02d}")
         torch.save({
             'epoch': epoch,
