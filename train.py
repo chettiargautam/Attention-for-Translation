@@ -32,6 +32,7 @@ def greedy_decode(model, source, source_mask, source_tokenizer, target_tokenizer
     - Finds the most likely next token at each step and appends it to the decoder input.
     - Just picks the token with the max probabilitiesability at each step as the next token.
     - May not give the ideal output, but it's fast and simple. For better results, use beam search.
+    
     Parameters:
     - model: The transformer model
     - source: The input sentence
@@ -40,9 +41,11 @@ def greedy_decode(model, source, source_mask, source_tokenizer, target_tokenizer
     - target_tokenizer: The tokenizer for the target language
     - max_length: The maximum length of the output sentence
     - device: The device to run the model on
+    
     Shapes:
     - source: (1, sequence_length, dimensions)
     - source_mask: (1, 1, sequence_length, sequence_length)
+    
     Returns: 
     - The output sentence
     """
@@ -81,6 +84,7 @@ def run_validation(model, validation_ds, source_tokenizer, target_tokenizer, max
     """
     Run Validation:
     - Runs the model on the validation dataset and prints the source, target and predicted sentences.
+    
     Parameters:
     - model: The transformer model
     - validation_ds: The validation dataset
@@ -91,9 +95,11 @@ def run_validation(model, validation_ds, source_tokenizer, target_tokenizer, max
     - print_message: A function to print messages
     - global_step: The global step
     - num_examples: The number of examples to print
+    
     Shapes:
     - source: (1, sequence_length, dimensions)
     - source_mask: (1, 1, sequence_length, sequence_length)
+    
     Returns:
     - Inference
     """
@@ -130,13 +136,13 @@ def run_validation(model, validation_ds, source_tokenizer, target_tokenizer, max
             expected.append(target_text)
             predicted.append(model_out_text)
             
-            print_message('-'*console_width)
+            print_message('-' * console_width)
             print_message(f"{f'SOURCE: ':>12}{source_text}")
             print_message(f"{f'TARGET: ':>12}{target_text}")
             print_message(f"{f'PREDICTED: ':>12}{model_out_text}")
 
             if count == num_examples:
-                print_message('-'*console_width)
+                print_message('-' * console_width)
                 break
 
 
@@ -144,9 +150,11 @@ def get_all_sentences(ds, language):
     """
     Get All Sentences:
     - A generator to get all sentences in a dataset
+    
     Parameters:
     - ds: The dataset
     - language: The language
+    
     Returns:
     - A generator
     """
@@ -158,12 +166,15 @@ def get_or_build_tokenizer(config, ds, language):
     """
     Get or Build Tokenizer:
     - Gets the tokenizer if it exists, otherwise builds it and saves it.
+    
     Parameters:
     - config: The configuration
     - ds: The dataset
     - language: The language
+    
     Returns:
     - The tokenizer
+    
     Refs:
     - https://huggingface.co/docs/tokenizers/quicktour
     """
@@ -183,8 +194,10 @@ def get_dataset(config):
     """
     Get Dataset:
     - Loads the dataset, builds the tokenizers and returns the dataloaders.
+    
     Parameters:
     - config: The configuration
+    
     Returns:
     - The training and validation dataloaders
     """
@@ -237,10 +250,12 @@ def get_model(config, vocab_src_len, vocab_tgt_len):
     """
     Get Model:
     - Builds the transformer model
+    
     Parameters:
     - config: The configuration
     - vocab_src_len: The length of the source vocabulary
     - vocab_tgt_len: The length of the target vocabulary
+    
     Returns:
     - The transformer model
     """
@@ -261,8 +276,10 @@ def train_model(config):
     """
     Train Model:
     - Trains the transformer model
+    
     Parameters:
     - config: The configuration
+    
     Steps:
     - Get the dataset
     - Get the model
@@ -347,6 +364,7 @@ def main():
     """
     Main:
     - The main function
+    
     Flow:
     - Check if the user is running the file as it is.
     - If it is run directly without additional system arguments, take default config values from config.py and train the model.
